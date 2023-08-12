@@ -12,7 +12,15 @@
   border-radius: 100%;
 }
 
+
+
 .photo-list__fav-icon-svg {
   padding: 7px;
   top: 2px;
+
+  $brigh-red-hover: #ee0000;
+  & path:hover {
+    stroke: $brigh-red-hover;
+    fill: $brigh-red-hover;
+  }
 }

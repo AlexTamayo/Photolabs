@@ -1,13 +1,18 @@
 import React from 'react';
+import HomeRoute from './routes/HomeRoute';
+import PhotoDetailsModal from './routes/PhotoDetailsModal';
 
-import PhotoListItem from './components/PhotoListItem';
 import './App.scss';
 
-// Note: Rendering a single component to build components in isolation
+import photos from './mocks/photos';
+import topics from './mocks/topics';
+
 const App = () => {
+
   return (
     <div className="App">
-      <PhotoListItem/>
+      < HomeRoute topicObjs={topics} photoObjs={photos}/>
+      {/* < PhotoDetailsModal /> */}
     </div>
   );
 };

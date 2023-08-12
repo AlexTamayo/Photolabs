@@ -1,5 +1,23 @@
 .fav-badge {
   position: relative;
+
+  $heart-colour: #C80000;
+  $notification-circle-colour: #00e61b;
+
+  circle {
+    fill: $notification-circle-colour;
+    stroke: $notification-circle-colour;
+  }
+
+  & path {
+    fill: $heart-colour;
+
+    &:hover {
+      stroke: $heart-colour;
+      fill: $heart-colour;
+    }
+
+  }
 }
 
 .fav-badge__count { 

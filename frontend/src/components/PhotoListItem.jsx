@@ -1,21 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import FavIcon from './FavIcon';
 
 import "../styles/PhotoListItem.scss";
+import "../styles/PhotoFavButton.scss";
 
+const PhotoListItem = (props) => {
 
-const sampleDataForPhotoListItem = {
-  id: "1",
-  location: {
-    city: "Montreal",
-    country: "Canada",
-  },
-  imageSource: `${process.env.PUBLIC_URL}/Image-1-Regular.jpeg`,
-  username: "Joe Example",
-  profile: `${process.env.PUBLIC_URL}/profile-1.jpg`,
-};
+  const { photoObjs, selectedValue, toggleFavSelect } = props;
 
-const PhotoListItem = () => {
-  /* Insert React */
+  const [displayAlertValue, setDisplayAlertValue] = useState(0);
+
+  return (
+  <div key={photoObjs.id} id={photoObjs.id} className="photo-list__item">
+    <div className="photo-list__fav-icon" >
+      < FavIcon 
+          displayAlert={displayAlertValue}
+          selected={selectedValue}
+          toggleFavSelect={toggleFavSelect}
+      />
+    </div>
+    <img className="photo-list__image" src={photoObjs.urls.regular}  />
+    <div className="photo-list__user-details">
+      <img className="photo-list__user-profile" src={photoObjs.user.profile} />
+      <div className="photo-list__user-info">
+        <p className="photo-list__user-username">{photoObjs.user.name}</p>
+        <p className="photo-list__user-location">{photoObjs.location.city}, {photoObjs.location.country}</p>
+      </div>
+    </div>
+  </div>
+  )
 };
 
 export default PhotoListItem;
