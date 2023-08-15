@@ -32,10 +32,10 @@ const App = () => {
       < HomeRoute
             photoObjs={photos}
             favStatus={favStatus}
-            toggleFavSelect={toggleFavSelect}
-            openModal={openModal}
             topicObjs={topics}
             isFavPhotoExist={isFavPhotoExist}
+            toggleFavSelect={toggleFavSelect}
+            openModal={openModal}
             getPhotosByTopic={getPhotosByTopic}
             reloadPhotos={reloadPhotos}
       />

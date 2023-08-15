@@ -8,7 +8,7 @@ const PhotoListItem = (props) => {
 
   const { photoObjs, selectedValue, toggleFavSelect, openModal} = props;
 
-  const [displayAlertValue, setDisplayAlertValue] = useState(0);
+  const displayAlertValue = 0;
 
   return (
   <div key={photoObjs.id} id={photoObjs.id} className="photo-list__item">
