@@ -1,103 +1,115 @@
-import { useReducer, useEffect } from 'react';
-import axios from 'axios';
+import { useReducer, useEffect } from "react";
+import axios from "axios";
 
 export const ACTIONS = {
-  FAV_PHOTO_ADDED: 'FAV_PHOTO_ADDED',
-  FAV_PHOTO_REMOVED: 'FAV_PHOTO_REMOVED',
-  SELECT_PHOTO: 'SELECT_PHOTO',
-  DISPLAY_PHOTO_DETAILS: 'DISPLAY_PHOTO_DETAILS',
-  CLOSE_PHOTO_DETAILS: 'CLOSE_PHOTO_DETAILS',
-  SET_PHOTO_DATA: 'SET_PHOTO_DATA',
-  SET_FAV_STATUS: 'SET_FAV_STATUS',
-  SET_TOPIC_DATA: 'SET_TOPIC_DATA',
-  GET_PHOTOS_BY_TOPIC: 'GET_PHOTOS_BY_TOPIC',
-  RELOAD_PHOTOS: 'RELOAD_PHOTOS',
+  FAV_PHOTO_ADDED: "FAV_PHOTO_ADDED",
+  FAV_PHOTO_REMOVED: "FAV_PHOTO_REMOVED",
+  SELECT_PHOTO: "SELECT_PHOTO",
+  DISPLAY_PHOTO_DETAILS: "DISPLAY_PHOTO_DETAILS",
+  CLOSE_PHOTO_DETAILS: "CLOSE_PHOTO_DETAILS",
+  SET_PHOTO_DATA: "SET_PHOTO_DATA",
+  SET_FAV_STATUS: "SET_FAV_STATUS",
+  SET_TOPIC_DATA: "SET_TOPIC_DATA",
+  SET_SIMILAR_PHOTOS: "SET_SIMILAR_PHOTOS",
+  REMOVE_SIMILAR_PHOTOS: "REMOVE_SIMILAR_PHOTOS",
 };
 
 const API = {
   GET_PHOTOS: "/api/photos",
   GET_TOPICS: "/api/topics",
-  GET_PHOTOS_BY_TOPICS: "/api/topics/photos/"
-}
-
+  GET_PHOTOS_BY_TOPICS: "/api/topics/photos/",
+};
 
 function reducer(state, action) {
   switch (action.type) {
-
     case ACTIONS.FAV_PHOTO_ADDED:
       return {
         ...state,
         favStatus: {
           ...state.favStatus,
-          [action.id]: 1
+          [action.id]: 1,
         },
-        isFavPhotoExist: 1
+        isFavPhotoExist: 1,
       };
 
     case ACTIONS.FAV_PHOTO_REMOVED:
       const updateFavStatus = {
         ...state.favStatus,
-        [action.id]: 0
+        [action.id]: 0,
       };
-      const isFavExist = Object.values(updateFavStatus).some(status => status === 1);
+      const isFavExist = Object.values(updateFavStatus).some(
+        (status) => status === 1
+      );
       return {
         ...state,
         favStatus: updateFavStatus,
-        isFavPhotoExist: isFavExist ? 1 : 0
+        isFavPhotoExist: isFavExist ? 1 : 0,
       };
 
     case ACTIONS.DISPLAY_PHOTO_DETAILS:
       return {
         ...state,
         selectedPhoto: action.photo,
-        modalVisible: true
+        modalVisible: true,
       };
 
     case ACTIONS.CLOSE_PHOTO_DETAILS:
       return {
         ...state,
         selectedPhoto: null,
-        modalVisible: false
+        modalVisible: false,
       };
 
     case ACTIONS.SET_PHOTO_DATA:
       return {
         ...state,
-        photos: action.photos
+        photos: action.photos,
+      };
+
+    case ACTIONS.SET_SIMILAR_PHOTOS:
+      return {
+        ...state,
+        similarPhotos: action.similarPhotos,
+      };
+
+    case ACTIONS.REMOVE_SIMILAR_PHOTOS:
+      return {
+        ...state,
+        similarPhotos: [],
       };
 
     case ACTIONS.SET_FAV_STATUS:
       return {
         ...state,
-        favStatus: action.favStatus
+        favStatus: action.favStatus,
       };
 
     case ACTIONS.SET_TOPIC_DATA:
       return {
         ...state,
-        topics: action.topics
+        topics: action.topics,
       };
-  
+
     default:
-      throw new Error (
+      throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
-      )
+      );
   }
 }
 
 /**
- * 
+ *
  * @returns anything
- */ 
+ */
 export default function useApplication() {
-
   const [state, dispatch] = useReducer(reducer, {
     photos: [],
     topics: [],
     selectedPhoto: null,
+    similarPhotos: [],
     modalVisible: false,
     isFavPhotoExist: 0,
-    favStatus: {}
+    favStatus: {},
   });
 
   useEffect(() => {
@@ -106,33 +118,42 @@ export default function useApplication() {
 
     const promises = [photosPromise, topicsPromise];
 
-    Promise.all(promises)
-      .then((arrayOfResponses) => {
+    Promise.all(promises).then((arrayOfResponses) => {
+      const photos = arrayOfResponses[0].data;
+      const topics = arrayOfResponses[1].data;
 
-        const photos = arrayOfResponses[0].data;
-        const topics = arrayOfResponses[1].data;
+      dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: photos });
 
-        dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: photos});
+      const initialFavStatus = photos.reduce((acc, photo) => {
+        acc[photo.id] = 0;
+        return acc;
+      }, {});
 
-        const initialFavStatus = photos.reduce((acc, photo) => {
-          acc[photo.id] = 0;
-          return acc;
-        }, {});
+      dispatch({ type: ACTIONS.SET_FAV_STATUS, favStatus: initialFavStatus });
 
-        dispatch({ type: ACTIONS.SET_FAV_STATUS, favStatus: initialFavStatus});
-
-        dispatch({ type: ACTIONS.SET_TOPIC_DATA, topics: topics});
-
-      })
-  }, [])
-
+      dispatch({ type: ACTIONS.SET_TOPIC_DATA, topics: topics });
+    });
+  }, []);
 
   const openModal = (photo) => {
-    dispatch({ type: ACTIONS.DISPLAY_PHOTO_DETAILS, photo});
+    dispatch({ type: ACTIONS.DISPLAY_PHOTO_DETAILS, photo });
+
+    axios.get(API.GET_PHOTOS).then((response) => {
+      const selectedPhotoIds = photo.similar_photos.map((photo) => photo.id);
+      const filteredPhotoObjs = response.data.filter((photo) =>
+        selectedPhotoIds.includes(photo.id)
+      );
+      dispatch({
+        type: ACTIONS.SET_SIMILAR_PHOTOS,
+        similarPhotos: filteredPhotoObjs,
+      });
+    });
   };
 
   const closeModal = () => {
-    dispatch({ type: ACTIONS.CLOSE_PHOTO_DETAILS })
+    dispatch({ type: ACTIONS.CLOSE_PHOTO_DETAILS });
+
+    dispatch({ type: ACTIONS.REMOVE_SIMILAR_PHOTOS });
   };
 
   const toggleFavSelect = (id) => {
@@ -144,26 +165,15 @@ export default function useApplication() {
   };
 
   const getPhotosByTopic = (topicId) => {
-    axios.get(API.GET_PHOTOS_BY_TOPICS + topicId)
-      .then((response) => {
-        dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: response.data });
-      });
+    axios.get(API.GET_PHOTOS_BY_TOPICS + topicId).then((response) => {
+      dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: response.data });
+    });
   };
 
   const reloadPhotos = () => {
-    axios.get(API.GET_PHOTOS)
-      .then((response) => {
-        dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: response.data });
-      });
-  };
-
-  const filterSimilarPhotos = (selectedPhoto) => {
-    if (selectedPhoto && selectedPhoto.similar_photos) {
-      const selectedPhotoIds = selectedPhoto.similar_photos.map(photo => photo.id);
-      const filteredPhotoObjs = state.photos.filter(photo => selectedPhotoIds.includes(photo.id));
-      return filteredPhotoObjs;
-    }
-    return [];
+    axios.get(API.GET_PHOTOS).then((response) => {
+      dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: response.data });
+    });
   };
 
   return {
@@ -173,7 +183,5 @@ export default function useApplication() {
     toggleFavSelect,
     getPhotosByTopic,
     reloadPhotos,
-    filterSimilarPhotos
   };
-  
 }

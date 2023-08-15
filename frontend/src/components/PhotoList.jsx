@@ -11,7 +11,6 @@ const PhotoList = (props) => {
           toggleFavSelect,
           openModal
         } = props;
-
   
   const photoListItemArr = [
     photoObjs

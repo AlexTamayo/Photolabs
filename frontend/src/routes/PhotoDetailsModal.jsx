@@ -11,13 +11,16 @@ const PhotoDetailsModal = (props) => {
 
   const {
           selectedPhoto,
-          photoObjs,
           favStatus,
           toggleFavSelect,
           openModal,
           selectedValue,
-          closeModal
+          closeModal,
+          similarPhotos,
+          toggleFavSelectMain,
+          photoObjs
         } = props;
+
 
   return (
     <div className="photo-details-modal">
@@ -30,7 +33,7 @@ const PhotoDetailsModal = (props) => {
         <div className="photo-details-modal__fav-icon" >
           < FavIcon
               selected={selectedValue}
-              toggleFavSelect={toggleFavSelect}
+              toggleFavSelect={toggleFavSelectMain}
           />
         </div>
 
@@ -57,7 +60,7 @@ const PhotoDetailsModal = (props) => {
 
       <div className='photo-details-modal__images'>
         < PhotoList
-            photoObjs={photoObjs}
+            photoObjs={similarPhotos}
             favStatus={favStatus}
             toggleFavSelect={toggleFavSelect}
             openModal={openModal}
