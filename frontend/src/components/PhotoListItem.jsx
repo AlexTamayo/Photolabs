@@ -6,7 +6,7 @@ import "../styles/PhotoFavButton.scss";
 
 const PhotoListItem = (props) => {
 
-  const { photoObjs, selectedValue, toggleFavSelect } = props;
+  const { photoObjs, selectedValue, toggleFavSelect, openModal} = props;
 
   const [displayAlertValue, setDisplayAlertValue] = useState(0);
 
@@ -19,7 +19,7 @@ const PhotoListItem = (props) => {
           toggleFavSelect={toggleFavSelect}
       />
     </div>
-    <img className="photo-list__image" src={photoObjs.urls.regular}  />
+    <img onClick={openModal} className="photo-list__image" src={photoObjs.urls.regular}  />
     <div className="photo-list__user-details">
       <img className="photo-list__user-profile" src={photoObjs.user.profile} />
       <div className="photo-list__user-info">

@@ -6,36 +6,29 @@ import "../styles/HomeRoute.scss";
 
 function HomeRoute(props) {
 
-  const { topicObjs, photoObjs } = props;
-
-  const [isFavPhotoExist, setIsFavPhotoExist] = useState(0);
-  
-  const initialFavStatus = photoObjs.reduce((acc, photo) => {
-    acc[photo.id] = 0;
-    return acc;
-  }, {})
-  
-  const [favStatus, setFavStatus] = useState(initialFavStatus);
-
-  const toggleFavSelect = (id) => {
-    setFavStatus(prevStatus => {
-      const newStatus = {...prevStatus, [id]: prevStatus[id] ? 0 : 1};
-      const isFavExist = Object.values(newStatus).some(status => status === 1);
-      setIsFavPhotoExist(isFavExist ? 1 : 0);
-      return newStatus;
-    });
-  };
+  // Destructiong props
+  const { 
+          topicObjs,
+          photoObjs,
+          openModal,
+          isFavPhotoExist,
+          toggleFavSelect,
+          favStatus,
+          getPhotosByTopic
+        } = props;
 
   return (
     <div className='home-route'>
       < TopNavigationBar
           topicObjs={topicObjs}
           isFavPhotoExist={isFavPhotoExist}
+          getPhotosByTopic={getPhotosByTopic}
       />
       < PhotoList
           photoObjs={photoObjs}
           favStatus={favStatus}
           toggleFavSelect={toggleFavSelect}
+          openModal={openModal}
       />
     </div>
   );

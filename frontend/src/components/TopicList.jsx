@@ -7,14 +7,21 @@ import "../styles/TopicList.scss";
 
 const TopicList = (props) => {
 
-  const { topicObjs } = props;
+  const {
+          topicObjs,
+          isFavPhotoExist,
+          getPhotosByTopic
+        } = props;
 
-  const { isFavPhotoExist } = props;
 
   const topicListItemArr = [
     topicObjs
     .map( topic => {
-      return < TopicListItem key={topic.id} topicObjs={topic}/>
+      return < TopicListItem
+                  key={topic.id}
+                  topicObjs={topic}
+                  getPhotosByTopic={getPhotosByTopic}
+              />
     })
   ];
 
