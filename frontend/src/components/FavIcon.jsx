@@ -3,8 +3,6 @@ import "../styles/PhotoFavButton.scss";
 
 const FavIcon = (props) => {
 
-  // {displayAlert, selected}
-
   const { displayAlert, selected, toggleFavSelect } = props;
 
   return (
