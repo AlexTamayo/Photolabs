@@ -1,6 +1,5 @@
 .top-nav-bar {
   display: flex;
-  // flex-direction: row;
   justify-content: space-between;
   padding: 8px;
   align-items: center;
@@ -17,4 +16,5 @@
   color: #111;
   text-underline-position: auto;
   margin-left: 24px;
+  cursor: pointer; 
 }

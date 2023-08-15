@@ -6,6 +6,7 @@ const FavIcon = (props) => {
   const { displayAlert, selected, toggleFavSelect } = props;
 
   return (
+
       <svg onClick={toggleFavSelect}
             className='photo-list__fav-icon-svg'
             viewBox="0 0 24 19"

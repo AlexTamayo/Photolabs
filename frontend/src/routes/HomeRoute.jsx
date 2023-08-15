@@ -14,7 +14,8 @@ function HomeRoute(props) {
           isFavPhotoExist,
           toggleFavSelect,
           favStatus,
-          getPhotosByTopic
+          getPhotosByTopic,
+          reloadPhotos,
         } = props;
 
   return (
@@ -23,6 +24,7 @@ function HomeRoute(props) {
           topicObjs={topicObjs}
           isFavPhotoExist={isFavPhotoExist}
           getPhotosByTopic={getPhotosByTopic}
+          reloadPhotos={reloadPhotos}
       />
       < PhotoList
           photoObjs={photoObjs}

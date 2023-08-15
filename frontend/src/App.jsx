@@ -14,6 +14,8 @@ const App = () => {
           closeModal,
           toggleFavSelect,
           getPhotosByTopic,
+          reloadPhotos,
+          filterSimilarPhotos,
         } = useApplicationData();
 
   const { 
@@ -35,16 +37,18 @@ const App = () => {
             topicObjs={topics}
             isFavPhotoExist={isFavPhotoExist}
             getPhotosByTopic={getPhotosByTopic}
+            reloadPhotos={reloadPhotos}
       />
-      {modalVisible && (< PhotoDetailsModal
-                              selectedPhoto={selectedPhoto}
-                              photoObjs={photos}
-                              favStatus={favStatus}
-                              selectedValue={favStatus[selectedPhoto.id]}
-                              toggleFavSelect={() => toggleFavSelect(selectedPhoto.id)}
-                              openModal={openModal}
-                              closeModal={closeModal}
-                        />)}
+      {modalVisible && (
+      < PhotoDetailsModal
+          selectedPhoto={selectedPhoto}
+          favStatus={favStatus}
+          selectedValue={favStatus[selectedPhoto.id]}
+          photoObjs={filterSimilarPhotos(selectedPhoto)}
+          toggleFavSelect={() => toggleFavSelect(selectedPhoto.id)}
+          openModal={openModal}
+          closeModal={closeModal}
+      />)}
     </div>
   );
 };
