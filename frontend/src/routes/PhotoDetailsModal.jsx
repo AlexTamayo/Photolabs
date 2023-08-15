@@ -18,7 +18,6 @@ const PhotoDetailsModal = (props) => {
           closeModal,
           similarPhotos,
           toggleFavSelectMain,
-          photoObjs
         } = props;
 
 
