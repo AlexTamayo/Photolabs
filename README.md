@@ -29,16 +29,16 @@ npm start
 # Screenshots
 
 ## **`Home`**
-![Home](/images/01_home.png)
+![Home](/docs/01_home.png)
 
 ## **`Like Notification`**
-![Like Notification](/images/02_like_notifications.png)
+![Like Notification](/docs/02_like_notifications.png)
 
 ## **`Modal View`**
-![Modal View](/images/03_modal_view.png)
+![Modal View](/docs/03_modal_view.png)
 
 ## **`By Topic 1`**
-![Topics 1](/images/04_topics_1.png)
+![Topics 1](/docs/04_topics_1.png)
 
 ## **`By Topic 2`**
-![Topics 2](/images/05_topics_2.png)
+![Topics 2](/docs/05_topics_2.png)
