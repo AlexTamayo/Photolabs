@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from "react";
 import axios from "axios";
 
+// Action types
 export const ACTIONS = {
   FAV_PHOTO_ADDED: "FAV_PHOTO_ADDED",
   FAV_PHOTO_REMOVED: "FAV_PHOTO_REMOVED",
@@ -14,12 +15,14 @@ export const ACTIONS = {
   REMOVE_SIMILAR_PHOTOS: "REMOVE_SIMILAR_PHOTOS",
 };
 
+// API endpoints
 const API = {
   GET_PHOTOS: "/api/photos",
   GET_TOPICS: "/api/topics",
   GET_PHOTOS_BY_TOPICS: "/api/topics/photos/",
 };
 
+// Reducer function
 function reducer(state, action) {
   switch (action.type) {
     case ACTIONS.FAV_PHOTO_ADDED:
@@ -98,10 +101,12 @@ function reducer(state, action) {
 }
 
 /**
- *
- * @returns anything
+ * Custom hook for managing application data
+ * @returns {Object} State and functions for managing application data
  */
 export default function useApplication() {
+
+  // Reducer initialization
   const [state, dispatch] = useReducer(reducer, {
     photos: [],
     topics: [],
@@ -112,6 +117,7 @@ export default function useApplication() {
     favStatus: {},
   });
 
+  // Fetching initial data
   useEffect(() => {
     const photosPromise = axios.get(API.GET_PHOTOS);
     const topicsPromise = axios.get(API.GET_TOPICS);
@@ -135,6 +141,7 @@ export default function useApplication() {
     });
   }, []);
 
+  // Function to open modal and fetch related data
   const openModal = (photo) => {
     dispatch({ type: ACTIONS.DISPLAY_PHOTO_DETAILS, photo });
 
@@ -150,12 +157,14 @@ export default function useApplication() {
     });
   };
 
+  // Function to close modal and reset related data
   const closeModal = () => {
     dispatch({ type: ACTIONS.CLOSE_PHOTO_DETAILS });
 
     dispatch({ type: ACTIONS.REMOVE_SIMILAR_PHOTOS });
   };
 
+  // Function to toggle favourite status of a photo
   const toggleFavSelect = (id) => {
     if (state.favStatus[id]) {
       dispatch({ type: ACTIONS.FAV_PHOTO_REMOVED, id });
@@ -164,18 +173,38 @@ export default function useApplication() {
     }
   };
 
+  // Function to get photos by topic
   const getPhotosByTopic = (topicId) => {
     axios.get(API.GET_PHOTOS_BY_TOPICS + topicId).then((response) => {
       dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: response.data });
     });
   };
 
+  // Function to reload photos
   const reloadPhotos = () => {
     axios.get(API.GET_PHOTOS).then((response) => {
       dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: response.data });
     });
   };
 
+  // Function to return the favourited photos
+  const getFavouritedPhotos = () => {
+
+    axios.get(API.GET_PHOTOS).then((response) => {
+      const favouritedPhotosIds = Object.keys(state.favStatus)
+        .filter(id => state.favStatus[id] === 1)
+        .map( id => parseInt(id));
+
+      if(favouritedPhotosIds.length > 0) {
+        const filteredPhotoObjs = response.data.filter(photo => favouritedPhotosIds.includes(photo.id));
+  
+        dispatch({ type: ACTIONS.SET_PHOTO_DATA, photos: filteredPhotoObjs });
+      }
+
+    });
+  };
+
+  // Return state and functions
   return {
     state,
     openModal,
@@ -183,5 +212,6 @@ export default function useApplication() {
     toggleFavSelect,
     getPhotosByTopic,
     reloadPhotos,
+    getFavouritedPhotos
   };
 }

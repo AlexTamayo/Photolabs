@@ -1,12 +1,23 @@
 .fav-badge {
   position: relative;
+  cursor: pointer;
 
   $heart-colour: #C80000;
   $notification-circle-colour: #00e61b;
 
+  $glow-colour: #ff000052;
+
+  & svg:hover {
+    border-radius: 100%;
+    overflow: visible;
+    background-color: $glow-colour;
+    box-shadow: 0 0 10px $glow-colour;
+  }
+
   circle {
     fill: $notification-circle-colour;
     stroke: $notification-circle-colour;
+    
   }
 
   & path {
@@ -15,6 +26,7 @@
     &:hover {
       stroke: $heart-colour;
       fill: $heart-colour;
+
     }
 
   }

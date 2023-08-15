@@ -5,6 +5,7 @@ import PhotoDetailsModal from './routes/PhotoDetailsModal';
 import './App.scss';
 
 import useApplicationData from './hooks/useApplicationData';
+import ApplicationContext from './hooks/ApplicationContext';
 
 const App = () => {
 
@@ -15,6 +16,7 @@ const App = () => {
           toggleFavSelect,
           getPhotosByTopic,
           reloadPhotos,
+          getFavouritedPhotos,
         } = useApplicationData();
 
   const { 
@@ -29,6 +31,7 @@ const App = () => {
 
   return (
     <div className="App">
+      < ApplicationContext.Provider value={{ getFavouritedPhotos }}>
       < HomeRoute
             photoObjs={photos}
             favStatus={favStatus}
@@ -50,7 +53,9 @@ const App = () => {
           toggleFavSelect={toggleFavSelect}
           openModal={openModal}
           closeModal={closeModal}
-      />)}
+      />
+      )}
+    </ApplicationContext.Provider>
     </div>
   );
 };
