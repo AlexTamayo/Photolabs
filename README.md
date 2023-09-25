@@ -5,6 +5,10 @@ The PhotoLabs project for the Web Development React course programming.
 
 ## MEDIA
 
+### **`Video`**
+
+https://github.com/AlexTamayo/Photolabs/assets/3316856/dc0d78ae-cccb-4669-9b2d-8fea147b9b39
+
 ### **`Home`**
 ![Home](/docs/01_home.png)
 
